@@ -1,5 +1,6 @@
 const Customer = require('../models/customer.model');
 const { validationResult } = require('express-validator');
+const sequelize = require('../config/connection');
 
 // create customer
 exports.create = async (req, res) => {
@@ -77,6 +78,19 @@ exports.delete = async (req, res) => {
         if (!customer)
             return res.status(422).json({ status: 'fail', msg: 'Error while deleting customer.' });
         return res.status(200).json({ status: 'ok', msg: 'Customer deleted successfully.' });
+    } catch (err) {
+        console.log('error', err);
+    }
+}
+
+// get customer by age 
+exports.getByAge = async (req, res) => {
+    try {
+        let customer = await sequelize.query('select name ,  FLOOR(DATEDIFF(NOW(), DATE(dob))/365) as age from customers ;');
+        console.log('customer', customer);
+        if (!customer)
+            return res.status(422).json({ status: 'fail', msg: 'Error while fetching customer with age.' });
+        return res.status(200).json({ status: 'ok', customer: customer[0] });
     } catch (err) {
         console.log('error', err);
     }

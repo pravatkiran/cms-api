@@ -22,4 +22,6 @@ router.delete('/delete/:id', check().custom((value, { req }) => {
         }
     })
 }), customerController.delete);
+
+router.get('/getByAge', customerController.getByAge);
 module.exports = router;
